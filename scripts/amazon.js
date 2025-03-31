@@ -82,10 +82,15 @@ forEach((button) => {
                 quantity:1
             });
         }
-        cart.push({
-            productId: productId,
-            quantity: 1
+        let cartQuantitiy = 0;
+
+        cart.forEach((item)=>{
+            cartQuantitiy += item.quantity;
+
         });
-        console.log(cart);
+
+        document.querySelector('.js-cart-quantity')
+        .innerHTML = cartQuantitiy;
+       
     });
 });
