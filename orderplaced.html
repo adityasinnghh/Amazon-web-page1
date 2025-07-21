@@ -1,0 +1,79 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Placed</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="styles/shared/general.css">
+  <link rel="stylesheet" href="styles/shared/amazon-header.css">
+  <style>
+    .confirmation-container {
+      max-width: 600px;
+      margin: 100px auto;
+      padding: 40px;
+      text-align: center;
+      border-radius: 16px;
+      background-color: #f0f0f0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .confirmation-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #2a9d8f;
+    }
+
+    .confirmation-message {
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .button-primary {
+      background-color: #ffd814;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 8px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .button-primary:hover {
+      background-color: #f7ca00;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="amazon-header">
+    <div class="amazon-header-left-section">
+      <a href="amazon.html" class="header-link">
+        <img class="amazon-logo" src="images/amazon-logo-white.png">
+      </a>
+    </div>
+    <div class="amazon-header-middle-section"></div>
+    <div class="amazon-header-right-section">
+      <a class="orders-link header-link" href="orders.html">
+        <span class="returns-text">Returns</span>
+        <span class="orders-text">& Orders</span>
+      </a>
+      <a class="cart-link header-link" href="checkout.html">
+        <img class="cart-icon" src="images/icons/cart-icon.png">
+        <div class="cart-text">Cart</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="confirmation-container">
+    <div class="confirmation-title">Thank you! Your order has been placed.</div>
+    <div class="confirmation-message">
+      You’ll receive a confirmation email shortly. You can view or track your order anytime in the “Returns & Orders” section.
+    </div>
+    <a href="orders.html" class="button-primary">View Your Orders</a>
+  </div>
+
+</body>
+</html>
