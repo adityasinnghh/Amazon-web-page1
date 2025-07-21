@@ -4,7 +4,6 @@ import { formatCurrancy } from './utils/money.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions } from '../data/deliveryOptions.js';
 
-// ========== DELIVERY OPTIONS ========== //
 function generateDeliveryOptionsHTML(matchingProduct, cartItem) {
   return deliveryOptions.map(deliveryOption => {
     const deliveryDate = dayjs().add(deliveryOption.deliveryDays, 'days');
@@ -31,7 +30,6 @@ function generateDeliveryOptionsHTML(matchingProduct, cartItem) {
   }).join('');
 }
 
-// ========== ORDER SUMMARY BOX ========== //
 function renderSummaryBox() {
   let itemTotalCents = 0;
   let shippingTotalCents = 0;
@@ -91,7 +89,6 @@ function renderSummaryBox() {
   }
 }
 
-// ========== MAIN RENDER FUNCTION ========== //
 function renderOrderSummary() {
   let cartSummaryHTML = '';
 
@@ -140,7 +137,6 @@ function renderOrderSummary() {
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
   renderSummaryBox();
 
-  // DELETE FUNCTION
   document.querySelectorAll('.js-delete-link').forEach(link => {
     link.addEventListener('click', () => {
       const productId = link.dataset.productId;
@@ -149,7 +145,6 @@ function renderOrderSummary() {
     });
   });
 
-  // DELIVERY OPTION CHANGE
   document.querySelectorAll('.js-delivery-option').forEach(option => {
     option.addEventListener('click', () => {
       const productId = option.dataset.productId;
@@ -159,7 +154,6 @@ function renderOrderSummary() {
     });
   });
 
-  // QUANTITY SELECT CHANGE
   document.querySelectorAll('.js-quantity-selector').forEach(select => {
     select.addEventListener('change', () => {
       const productId = select.dataset.productId;
@@ -172,7 +166,6 @@ function renderOrderSummary() {
     });
   });
 
-  // PLACE ORDER BUTTON EVENT
   const placeOrderBtn = document.getElementById('place-order-btn');
   if (placeOrderBtn) {
     placeOrderBtn.addEventListener('click', () => {
@@ -188,13 +181,17 @@ function renderOrderSummary() {
           itemTotalCents += product.priceCents * cartItem.quantity;
           shippingTotalCents += deliveryOption.priceCents;
 
+          const deliveryDate = dayjs().add(deliveryOption.deliveryDays, 'days');
+          const deliveryDateFormatted = deliveryDate.format('dddd, MMMM D');
+
           items.push({
-            id: product.id,
-            name: product.name,
-            image: product.image,
-            priceCents: product.priceCents,
-            quantity: cartItem.quantity,
-            deliveryDays: deliveryOption.deliveryDays
+              id: product.id,
+              name: product.name,
+              image: product.image,
+              priceCents: product.priceCents,
+              quantity: cartItem.quantity,
+              deliveryDays: deliveryOption.deliveryDays,
+              deliveryDate: deliveryDateFormatted
           });
         }
       });
@@ -207,6 +204,7 @@ function renderOrderSummary() {
         id: crypto.randomUUID(),
         date: new Date().toISOString(),
         totalCents: orderTotalCents,
+        total: (orderTotalCents / 100).toFixed(2), // ✅ Add formatted total
         items
       };
 
@@ -214,14 +212,11 @@ function renderOrderSummary() {
       existingOrders.unshift(order);
       localStorage.setItem('placedOrders', JSON.stringify(existingOrders));
 
-      // Clear cart from local storage
       localStorage.setItem('cart', JSON.stringify([]));
 
-      // Redirect to order placed page
       window.location.href = 'orderplaced.html';
     });
   }
 }
 
-// INITIALIZE
 renderOrderSummary();
