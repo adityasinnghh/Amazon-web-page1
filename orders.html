@@ -1,70 +1,85 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Orders</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<head>
+  <title>Orders</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="styles/shared/general.css">
-    <link rel="stylesheet" href="styles/shared/amazon-header.css">
-    <link rel="stylesheet" href="styles/pages/orders.css">
-  </head>
-  <body>
-    <div class="amazon-header">
-      <div class="amazon-header-left-section">
-        <a href="index.html" class="header-link">
-          <img class="amazon-logo" src="images/amazon-logo-white.png">
-          <img class="amazon-mobile-logo" src="images/amazon-mobile-logo-white.png">
-        </a>
-      </div>
-
-      <div class="amazon-header-middle-section">
-        <input class="search-bar" type="text" placeholder="Search">
-        <button class="search-button">
-          <img class="search-icon" src="images/icons/search-icon.png">
-        </button>
-      </div>
-
-      <div class="amazon-header-right-section">
-        <a class="orders-link header-link" href="orders.html">
-          <span class="returns-text">Returns</span>
-          <span class="orders-text">& Orders</span>
-        </a>
-        <a class="cart-link header-link" href="checkout.html">
-          <img class="cart-icon" src="images/icons/cart-icon.png">
-          <div class="cart-quantity">3</div>
-          <div class="cart-text">Cart</div>
-        </a>
-      </div>
+  <link rel="stylesheet" href="styles/shared/general.css">
+  <link rel="stylesheet" href="styles/shared/amazon-header.css">
+  <link rel="stylesheet" href="styles/pages/orders.css">
+</head>
+<body>
+  <div class="amazon-header">
+    <div class="amazon-header-left-section">
+      <a href="index.html" class="header-link">
+        <img class="amazon-logo" src="images/amazon-logo-white.png">
+        <img class="amazon-mobile-logo" src="images/amazon-mobile-logo-white.png">
+      </a>
     </div>
 
-    <div class="main">
-      <div class="page-title">Your Orders</div>
-      <div class="orders-grid" id="orders-grid"></div>
+    <div class="amazon-header-middle-section">
+      <input class="search-bar" type="text" placeholder="Search">
+      <button class="search-button">
+        <img class="search-icon" src="images/icons/search-icon.png">
+      </button>
     </div>
 
-    <script>
-      function loadOrdersFromStorage() {
-        const orders = JSON.parse(localStorage.getItem("placedOrders")) || [];
-        const container = document.getElementById("orders-grid");
+    <div class="amazon-header-right-section">
+      <a class="orders-link header-link" href="orders.html">
+        <span class="returns-text">Returns</span>
+        <span class="orders-text">& Orders</span>
+      </a>
+      <a class="cart-link header-link" href="checkout.html">
+        <img class="cart-icon" src="images/icons/cart-icon.png">
+        <div class="cart-quantity">3</div>
+        <div class="cart-text">Cart</div>
+      </a>
+    </div>
+  </div>
 
-        if (orders.length === 0) {
-          container.innerHTML = '<p>No recent orders found.</p>';
-          return;
-        }
+  <div class="main">
+    <div class="page-title">Your Orders</div>
+    <div class="orders-grid" id="orders-grid"></div>
+  </div>
 
-        orders.forEach((order) => {
-          const itemsHtml = order.items.map(item => `
+  <script src="https://unpkg.com/dayjs@1.11.10/dayjs.min.js"></script>
+  <script>
+    function formatCurrency(cents) {
+      return (cents / 100).toFixed(2);
+    }
+
+    function loadOrdersFromStorage() {
+      const orders = JSON.parse(localStorage.getItem("placedOrders")) || [];
+      const container = document.getElementById("orders-grid");
+
+      if (orders.length === 0) {
+        container.innerHTML = '<p>No recent orders found.</p>';
+        return;
+      }
+
+      orders.forEach((order) => {
+        const itemsHtml = order.items.map(item => {
+          // Safely get delivery date
+          let arrivingDate = 'Unknown';
+          if (item.deliveryDays) {
+            arrivingDate = dayjs(order.date).add(item.deliveryDays, 'day').format('dddd, MMMM D');
+          }
+
+          return `
             <div class="product-image-container">
               <img src="${item.image}" alt="${item.name}">
             </div>
             <div class="product-details">
               <div class="product-name">${item.name}</div>
-              <div class="product-delivery-date">Arriving on: ${item.deliveryDate}</div>
+              <div class="product-delivery-date">Arriving on: ${arrivingDate}</div>
               <div class="product-quantity">Quantity: ${item.quantity}</div>
-              <button class="buy-again-button button-primary">
+              <button 
+                class="buy-again-button button-primary js-buy-again" 
+                data-product-id="${item.id}" 
+                data-quantity="${item.quantity}">
                 <img class="buy-again-icon" src="images/icons/buy-again.png">
                 <span class="buy-again-message">Buy it again</span>
               </button>
@@ -74,37 +89,65 @@
                 <button class="track-package-button button-secondary">Track package</button>
               </a>
             </div>
-          `).join('');
+          `;
+        }).join('');
 
-          const orderHtml = `
-            <div class="order-container">
-              <div class="order-header">
-                <div class="order-header-left-section">
-                  <div class="order-date">
-                    <div class="order-header-label">Order Placed:</div>
-                    <div>${order.date}</div>
-                  </div>
-                  <div class="order-total">
-                    <div class="order-header-label">Total:</div>
-                    <div>$${order.total}</div>
-                  </div>
+        const totalFormatted = order.totalCents !== undefined
+          ? `$${formatCurrency(order.totalCents)}`
+          : 'Unavailable';
+
+        const orderHtml = `
+          <div class="order-container">
+            <div class="order-header">
+              <div class="order-header-left-section">
+                <div class="order-date">
+                  <div class="order-header-label">Order Placed:</div>
+                  <div>${new Date(order.date).toDateString()}</div>
                 </div>
-                <div class="order-header-right-section">
-                  <div class="order-header-label">Order ID:</div>
-                  <div>${order.id}</div>
+                <div class="order-total">
+                  <div class="order-header-label">Total:</div>
+                  <div>${totalFormatted}</div>
                 </div>
               </div>
-              <div class="order-details-grid">
-                ${itemsHtml}
+              <div class="order-header-right-section">
+                <div class="order-header-label">Order ID:</div>
+                <div>${order.id}</div>
               </div>
             </div>
-          `;
+            <div class="order-details-grid">
+              ${itemsHtml}
+            </div>
+          </div>
+        `;
 
-          container.insertAdjacentHTML("beforeend", orderHtml);
-        });
+        container.insertAdjacentHTML("beforeend", orderHtml);
+      });
+    }
+
+    // Buy it again button handler
+    document.addEventListener('click', function (event) {
+      const btn = event.target.closest('.js-buy-again');
+      if (!btn) return;
+
+      const productId = btn.dataset.productId;
+      const quantity = parseInt(btn.dataset.quantity, 10) || 1;
+
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(item => item.productId === productId);
+
+      if (existingItem) {
+        existingItem.quantity += quantity;
+      } else {
+        cart.push({ productId, quantity });
       }
 
-      window.addEventListener("DOMContentLoaded", loadOrdersFromStorage);
-    </script>
-  </body>
+      localStorage.setItem('cart', JSON.stringify(cart));
+
+      // Redirect to html page
+      window.location.href = 'index.html';
+    });
+
+    window.addEventListener("DOMContentLoaded", loadOrdersFromStorage);
+  </script>
+</body>
 </html>
