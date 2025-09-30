@@ -3,7 +3,7 @@
 **Demo website inspired by Amazon** – built for learning and showcasing front-end development skills.  
 You can:
 - Browse and select items
-- Add items to the cart
+- Add items to the cart 
 - Place an order
 - Track your orders *(tracking section in progress)*
 
