@@ -4,7 +4,7 @@
 You can:
 - Browse and select items
 - Add items to the cart 
-- Place an order
+- Place an order 
 - Track your orders *(tracking section in progress)*
 
 > **Note:** The search and tracking features are under development and will be updated soon.
