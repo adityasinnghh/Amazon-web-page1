@@ -9,7 +9,7 @@ You can:
 
 > **Note:** The search and tracking features are under development and will be updated soon.
 
---- 
+---  
 
 ## 🖥️ Tech Stack
 - **Editor:** VS Code  
