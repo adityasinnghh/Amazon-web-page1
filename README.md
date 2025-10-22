@@ -11,14 +11,14 @@ You can:
  
 ---     
 
-## 🖥️ Tech Stack
+## 🖥️ Tech Stack 
 - **Editor:** VS Code  
 - **Languages:** HTML, CSS, JavaScript  
 
 ---
 
 ## 🌐 Live Demo
-Click here to visit the live website:  
+Click here to visit the live website: 
 🔗 **[Amazon Web Page Demo](https://adityasinnghh.github.io/Amazon-web-page1/)**
 
 ---
